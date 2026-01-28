@@ -14,7 +14,7 @@ I wrote this script to solve the Inverse Kinematics directly on the Flight Contr
 * **Testing:** Works in SITL Rover.
 
 ## How to Run in SITL
-1. Copy the script to your scripts folder:
+1. Copy the script to the scripts folder:
    `cp scara_ik_driver.lua ~/ardupilot/Rover/scripts/`
 2. Run the Rover simulation:
    `../Tools/autotest/sim_vehicle.py -v Rover --console --map`
