@@ -1,28 +1,54 @@
-# ArduPilot Lua SCARA Solver
+ArduPilot Lua SCARA Solver
+This is a standalone Lua script to test Inverse Kinematics (IK) for 3-DOF robotic arms directly within ArduPilot.
 
-This is a standalone Lua script to test Inverse Kinematics (IK) for 3-DOF robotic arms in ArduPilot.
+The Problem
+Currently, controlling a robotic arm using Cartesian (XYZ) coordinates in ArduPilot usually requires a heavy companion computer (like a Raspberry Pi) running ROS to handle the kinematics.
 
-## The Problem
-Currently, if you want to control a robotic arm with XYZ coordinates in ArduPilot, you need a companion computer (like a Raspberry Pi) running ROS.
+The Solution
+This script solves the Inverse Kinematics directly on the Flight Controller using Lua. It calculates the required angles for the Base, Shoulder, and Elbow servos based on a target XYZ position provided via MAVLink.
 
-## My Solution
-I wrote this script to solve the Inverse Kinematics directly on the Flight Controller using Lua. It calculates the angles for the Base, Shoulder, and Elbow servos based on a target XYZ position.
+Current Status
+Math: Implements 3-DOF Analytical IK (Law of Cosines).
 
-## Current Status
-* **Math:** Implements 3-DOF Analytical IK (Law of Cosines).
-* **Safety:** Clamps PWM values if the target is out of reach.
-* **Testing:** Works in SITL Rover.
+Control: Maps standard MAVLink parameters (SCR_USERx) to arm coordinates.
 
-## How to Run in SITL
-1. Copy the script to the scripts folder:
-   `cp scara_ik_driver.lua ~/ardupilot/Rover/scripts/`
-2. Run the Rover simulation:
-   `../Tools/autotest/sim_vehicle.py -v Rover --console --map`
-3. Enable Scripting in MAVProxy:
-   `param set SCR_ENABLE 1`
-   `reboot`
-4. **Move the Arm:**
-   Set the Target X coordinate (in mm) using the User Parameter:
-   `param set SCR_USER1 150`
-   
-   (SCR_USER1 = X, SCR_USER2 = Y, SCR_USER3 = Z)
+Safety: Includes reachability checks (clamps if target is out of range).
+
+Testing: Verified in SITL Rover.
+
+How to Run in SITL
+1. Install the Script Copy the script to your vehicle's scripts folder:
+
+Bash
+cp scara_ik_driver.lua ~/ardupilot/Rover/scripts/
+2. Start Simulation Run the Rover simulator with the console enabled:
+
+Bash
+../Tools/autotest/sim_vehicle.py -v Rover --console --map
+3. Enable Scripting In the MAVProxy console, type:
+
+Bash
+param set SCR_ENABLE 1
+reboot
+4. Move the Arm The arm listens to the SCR_USER parameters (in millimeters):
+
+SCR_USER1 = X (Forward/Back)
+
+SCR_USER2 = Y (Left/Right)
+
+SCR_USER3 = Z (Up/Down)
+
+Example command to move the arm 150mm forward:
+
+Bash
+param set SCR_USER1 150
+5. Monitor Output Watch the MAVProxy console for status messages:
+
+AP: Arm: Tgt(150,0) -> PWM Base:1xxx
+
+Hardware Pinout
+Servo 1: Base Joint
+
+Servo 2: Shoulder Joint
+
+Servo 3: Elbow Joint
