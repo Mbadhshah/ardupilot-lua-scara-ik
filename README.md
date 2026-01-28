@@ -13,14 +13,16 @@ I wrote this script to solve the Inverse Kinematics directly on the Flight Contr
 * **Safety:** Clamps PWM values if the target is out of reach.
 * **Testing:** Works in SITL Rover.
 
-## How to Run
-1.  Put `scara_ik_driver.lua` in your `ardupilot/scripts/` folder.
-2.  Run SITL: `sim_vehicle.py -v Rover --console --map`
-3.  Enable scripting in MAVProxy:
-    * `param set SCR_ENABLE 1`
-    * `param set SCR_HEAP_SIZE 100000`
-    * `reboot`
-4.  You will see PWM outputs in the console window.
-
-## Future Plans (GSoC 2026)
-I plan to turn this into a standard library in `AP_Scripting/applets` and add MAVLink support so users can control the arm from a Ground Station.
+## How to Run in SITL
+1. Copy the script to your scripts folder:
+   `cp scara_ik_driver.lua ~/ardupilot/Rover/scripts/`
+2. Run the Rover simulation:
+   `../Tools/autotest/sim_vehicle.py -v Rover --console --map`
+3. Enable Scripting in MAVProxy:
+   `param set SCR_ENABLE 1`
+   `reboot`
+4. **Move the Arm:**
+   Set the Target X coordinate (in mm) using the User Parameter:
+   `param set SCR_USER1 150`
+   
+   (SCR_USER1 = X, SCR_USER2 = Y, SCR_USER3 = Z)
